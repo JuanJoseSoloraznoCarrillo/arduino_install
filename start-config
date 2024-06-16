@@ -1,0 +1,99 @@
+#!/bin/bash
+
+#Constants
+arduino="arduino-mk";
+SUCCESS=255;
+FAILED=254;
+user="$(ls /home/)" #gets the user name
+
+trap ctrl_c INT;
+ctrl_c(){
+  echo "[*] exit ...";
+  exit 0;
+}
+
+check_installation(){
+  dpkg -l | grep -E "$arduino" > /dev/null
+  if [ "$(echo $?)" == 0 ];then
+    return $SUCCESS
+  else
+    return $FAILED
+  fi
+}
+
+install_arduino_mk(){
+  echo "[+] >>Installing 'arduino-mk'"
+  sudo apt-get install "$arduino" 1>/dev/null 
+  if [ "$(echo $?)" == 0 ];then
+    echo "arduino-mk installation Success"
+  else
+    echo "No possible to install arduino-mk"
+    exit 1
+  fi
+}
+
+create_dirs(){
+  mkdir -p /home/$user/arduino/sketchbook/libraries
+}
+
+create_makefile(){
+  touch /home/$user/arduino/sketchbook/Makefile
+  echo "ARDUINO_FIR = /usr/share/arduino
+ARDUINO_PORT = /dev/ttyACM*
+
+USER_LIB_PATH = /home/$user/arduino/sketchbook/libraries
+BOARD_TAG = uno
+
+include /usr/share/arduino/Arduino.mk" > /home/$user/arduino/sketchbook/Makefile
+}
+
+check_avrdude_cnf_file(){
+  ls /usr/share/arduino/hardware/tools/avr/etc 2>/dev/null
+  if [ "$(echo $?)" == 2 ];then
+    mkdir -p /usr/share/arduino/hardware/tools/avr/etc
+    cp -f /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/
+  else
+    echo "[+] avrdude.conf correctly found"
+  fi
+}
+
+create_first_script(){
+  touch /home/$user/arduino/sketchbook/first_script.ino
+  echo 'void setup(){
+  pinMode(13, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop(){
+  digitalWrite(13, HIGH);
+  delay(1000);
+  digitalWrite(13, LOW);
+  delay(1000);
+  Serial.println("Hello world");
+}' > /home/$user/arduino/sketchbook/first_script.ino
+} 
+
+# Main code flow
+if [ "$(id -u)" == "0" ];then
+  check_installation # checking if arduino package is already installed.
+  if [ "$(echo $?)" == $SUCCESS ];then
+    echo "[+] $arduino is already installed."
+    create_dirs
+  else
+    install_arduino_mk # if arduino package is not installed, it will be installed.
+    create_dirs
+  fi
+  create_makefile # create make configuration file
+  check_avrdude_cnf_file
+  create_first_script
+  echo "[+] Connect the arduino board and execute the following commands:"
+  echo "    >>\$ make"
+  echo "    >>\$ make upload"
+  echo "    >>\$ make clean"
+  echo "[+] Also you can combine this commands by:"
+  echo "    >>\$ make upload clean"
+  sudo chown -R $user:$user /home/$user/arduino/
+
+else
+  echo "[!] >>Run it as root user."
+fi
