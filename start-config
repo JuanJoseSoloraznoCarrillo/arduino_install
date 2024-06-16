@@ -2,6 +2,7 @@
 
 #Constants
 arduino="arduino-mk";
+ino_screen="screen";
 SUCCESS=255;
 FAILED=254;
 user="$(ls /home/)" #gets the user name
@@ -24,6 +25,7 @@ check_installation(){
 install_arduino_mk(){
   echo "[+] >>Installing 'arduino-mk'"
   sudo apt-get install "$arduino" 1>/dev/null 
+  sudo apt-get install "$ino_screen" 1>/dev/null
   if [ "$(echo $?)" == 0 ];then
     echo "arduino-mk installation Success"
   else
@@ -92,6 +94,10 @@ if [ "$(id -u)" == "0" ];then
   echo "    >>\$ make clean"
   echo "[+] Also you can combine this commands by:"
   echo "    >>\$ make upload clean"
+  echo "[+] Run monitor:"
+  echo "    >>\$ make monitor"
+  echo "[+] out from monitor: ctrl-a + ctrl+d"
+  echo "[+] stop monitr port ->   >>\$ screen -X quit"
   sudo chown -R $user:$user /home/$user/arduino/
 
 else
