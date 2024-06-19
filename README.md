@@ -1,4 +1,5 @@
 __*Installaion:*__
+example:
     - Gives the execution permissions: `chmod +x start-config`
     - Execute it: `sudo ./start-config` or `sudo bash start-config`
 
