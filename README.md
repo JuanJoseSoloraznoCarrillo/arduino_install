@@ -1,4 +1,4 @@
-__*Installaion:*__
+__*Installation:*__
 
 - Gives the execution permissions: `chmod +x start-config`
 - Execute it: `sudo ./start-config` or `sudo bash start-config`
