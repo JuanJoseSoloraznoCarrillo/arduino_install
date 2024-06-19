@@ -1,5 +1,3 @@
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-[![Build Status](https://github.com/JuanJoseSoloraznoCarrillo/arduino_install.git)](https://github.com/JuanJoseSoloraznoCarrillo/arduino_install.git)
 __*Installaion:*__
 
 - Gives the execution permissions: `chmod +x start-config`
