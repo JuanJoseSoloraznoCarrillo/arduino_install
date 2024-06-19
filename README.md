@@ -6,12 +6,12 @@ __*Installaion:*__
 __*Information:*__
 
  The tool wil install the following packages:
-    1. arduino-mk: to compile the .ino files.
-    2. screen: to see the output console.
-    3. Creates the following folders:
-        - arduino
-        - sketchbooks
-        - libraries
-    4. Creates the following files:
-        - Makefile
+1. arduino-mk: to compile the .ino files.
+2. screen: to see the output console.
+3. Creates the following folders:
+    - arduino
+    - sketchbooks
+    - libraries
+4. Creates the following files:
+    - Makefile
 
