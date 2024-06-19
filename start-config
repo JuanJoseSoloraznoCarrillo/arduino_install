@@ -14,8 +14,23 @@ ctrl_c(){
 }
 
 check_installation(){
+  arduino_installed=false
+  screen_installed=false
   dpkg -l | grep -E "$arduino" > /dev/null
   if [ "$(echo $?)" == 0 ];then
+    echo "[+] $arduino is already installed."
+    arduino_installed=true
+  else
+    echo "[!] $arduino is not installed."
+  fi
+  dpkg -l | grep -E "$screen" > /dev/null
+  if [ "$(echo $?)" == 0 ];then
+    echo "[+] arduino-screen is already installed."
+    screen_installed=true
+  else
+    echo "[!] arduino-screen is not installed."
+  fi
+  if $arduino_installed && $screen_installed;then 
     return $SUCCESS
   else
     return $FAILED
@@ -23,13 +38,19 @@ check_installation(){
 }
 
 install_arduino_mk(){
-  echo "[+] >>Installing 'arduino-mk'"
+  echo ">> Installing 'arduino-mk'"
   sudo apt-get install "$arduino" 1>/dev/null 
+  if [ "$(echo $?)" == 0 ];then
+    echo ">> arduino-mk installation Success"
+  else
+    echo "[!] Error: No possible to install arduino-mk"
+    exit 1
+  fi
   sudo apt-get install "$ino_screen" 1>/dev/null
   if [ "$(echo $?)" == 0 ];then
-    echo "arduino-mk installation Success"
+    echo ">> arduino-screen installation Success"
   else
-    echo "No possible to install arduino-mk"
+    echo "[!] Error: No possible to install arduino-screen"
     exit 1
   fi
 }
@@ -50,12 +71,12 @@ include /usr/share/arduino/Arduino.mk" > /home/$user/arduino/sketchbook/Makefile
 }
 
 check_avrdude_cnf_file(){
-  ls /usr/share/arduino/hardware/tools/avr/etc 2>/dev/null
+  ls /usr/share/arduino/hardware/tools/avr/etc 2>/dev/null 1>&2
   if [ "$(echo $?)" == 2 ];then
     mkdir -p /usr/share/arduino/hardware/tools/avr/etc
     cp -f /etc/avrdude.conf /usr/share/arduino/hardware/tools/avr/etc/
   else
-    echo "[+] avrdude.conf correctly found"
+    echo ">> avrdude.conf correctly found"
   fi
 }
 
@@ -75,11 +96,30 @@ void loop(){
 }' > /home/$user/arduino/sketchbook/first_script.ino
 } 
 
+message(){
+  echo ""
+  echo "============================================================================"
+  echo "[?]    How to use the:"
+  echo "============================================================================"
+  echo "[*] Connect the arduino board and execute the following commands:"
+  echo "    \$ make"
+  echo "    \$ make upload"
+  echo "    \$ make clean"
+  echo "Also you can combine this commands by:"
+  echo "    \$ make upload clean"
+  echo "----------------------------------------------------------------------------"
+  echo "[*] Run monitor mode:"
+  echo "    \$ make monitor"
+  echo "[*] Go out from the monitor:"
+  echo "    - Press: ctrl-a + ctrl+d"
+  echo "[*] Stop monior port:"
+  echo "    \$ screen -X quit"
+}
+
 # Main code flow
 if [ "$(id -u)" == "0" ];then
   check_installation # checking if arduino package is already installed.
   if [ "$(echo $?)" == $SUCCESS ];then
-    echo "[+] $arduino is already installed."
     create_dirs
   else
     install_arduino_mk # if arduino package is not installed, it will be installed.
@@ -88,18 +128,10 @@ if [ "$(id -u)" == "0" ];then
   create_makefile # create make configuration file
   check_avrdude_cnf_file
   create_first_script
-  echo "[+] Connect the arduino board and execute the following commands:"
-  echo "    >>\$ make"
-  echo "    >>\$ make upload"
-  echo "    >>\$ make clean"
-  echo "[+] Also you can combine this commands by:"
-  echo "    >>\$ make upload clean"
-  echo "[+] Run monitor:"
-  echo "    >>\$ make monitor"
-  echo "[+] out from monitor: ctrl-a + ctrl+d"
-  echo "[+] stop monitr port ->   >>\$ screen -X quit"
+  echo ">> Arduino configuration: Success"
+  message
   sudo chown -R $user:$user /home/$user/arduino/
 
 else
-  echo "[!] >>Run it as root user."
+  echo "[!] Error: Run as root user."
 fi
