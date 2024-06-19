@@ -1,7 +1,7 @@
 __*Installaion:*__
-example:
-    - Gives the execution permissions: `chmod +x start-config`
-    - Execute it: `sudo ./start-config` or `sudo bash start-config`
+
+- Gives the execution permissions: `chmod +x start-config`
+- Execute it: `sudo ./start-config` or `sudo bash start-config`
 
 __*Information:*__
     The tool wil install the following packages:
