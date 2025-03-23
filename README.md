@@ -1,17 +1,32 @@
-__*Installation:*__
+# Arduino Installation Script
 
-- Gives the execution permissions: `chmod +x start-config`
-- Execute it: `sudo ./start-config` or `sudo bash start-config`
+## Installation
 
-__*Information:*__
+1. Give execution permissions to the script:
+    ```sh
+    chmod +x start-config
+    ```
 
- The tool wil install the following packages:
-1. arduino-mk: to compile the .ino files.
-2. screen: to see the output console.
-3. Creates the following folders:
-    - arduino
-    - sketchbooks
-    - libraries
-4. Creates the following files:
-    - Makefile
+2. Execute the script:
+    ```sh
+    sudo ./start-config
+    ```
+    or
+    ```sh
+    sudo bash start-config
+    ```
+
+## Information
+
+This tool will install the following packages:
+1. **arduino-mk**: To compile the `.ino` files.
+2. **screen**: To see the output console.
+
+Additionally, it will create the following directories:
+- `arduino`
+- `sketchbooks`
+- `libraries`
+
+And the following files:
+- `Makefile`
 
