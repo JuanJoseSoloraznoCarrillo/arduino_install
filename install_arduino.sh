@@ -1,7 +1,7 @@
 #!/bin/bash
 #===============================================================================
 # Author: Solorzano, Juan Jose.
-# Date: 2019-12-10
+# Date: 2023-12-10
 # Title: Arduino installation script.
 # Description: This script will install arduino-mk and screen packages.
 # Also, it will create the necessary directories and files to start working
